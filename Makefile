@@ -757,26 +757,16 @@ endif
 endif
 endif
 
-ifdef CONFIG_LLVM_POLLY
-KBUILD_CFLAGS	+= -mllvm -polly \
-		           -mllvm -polly-run-inliner \
-				   -mllvm -polly-reschedule=1 \
-		           -mllvm -polly-loopfusion-greedy=1 \
-				   -mllvm -polly-postopts=1 \
-		           -mllvm -polly-ast-use-context \
-		           -mllvm -polly-detect-keep-going \
-		           -mllvm -polly-vectorizer=stripmine \
-		           -mllvm -polly-invariant-load-hoisting
 # Polly may optimise loops with dead paths beyound what the linker
 # can understand. This may negate the effect of the linker's DCE
 # so we tell Polly to perfom proven DCE on the loops it optimises
 # in order to preserve the overall effect of the linker's DCE.
 ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
-POLLY_FLAGS	+= -mllvm -polly-run-dce
-endif
-OPT_FLAGS	+= $(POLLY_FLAGS)
-KBUILD_LDFLAGS	+= $(POLLY_FLAGS)
-endif
+#POLLY_FLAGS	+= -mllvm -polly-run-dce
+#endif
+#OPT_FLAGS	+= $(POLLY_FLAGS)
+#KBUILD_LDFLAGS	+= $(POLLY_FLAGS)
+#endif
 KBUILD_CFLAGS	+= $(OPT_FLAGS)
 KBUILD_AFLAGS   += $(OPT_FLAGS)
 
@@ -2034,3 +2024,9 @@ FORCE:
 # Declare the contents of the PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
 .PHONY: $(PHONY)
+
+#kpm
+KBUILD_CFLAGS += -I$(srctree)/sukisu_patch/include
+KBUILD_CFLAGS += -I$(srctree)/sukisu_patch/linux
+obj-y += ../sukisu_patch/base/setup.o
+obj-y += ../sukisu_patch/base/baselib.o
